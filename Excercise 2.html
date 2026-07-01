@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summer Transformation Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #090d16 0%, #111827 100%);
+            --card-bg: rgba(31, 41, 55, 0.7);
+            --text-main: #ffffff;
+            --text-muted: #9ca3af;
+            --accent: #00f2fe;
+            --accent-hover: #38bdf8;
+            --success: #10b981;
+            --border: rgba(255, 255, 255, 0.08);
+            --shadow: rgba(0, 0, 0, 0.4);
+        }
+
+        [data-theme="light"] {
+            --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --success: #16a34a;
+            --border: rgba(0, 0, 0, 0.08);
+            --shadow: rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background 0.25s, color 0.25s, border-color 0.25s;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            font-family: 'Poppins', 'Cairo', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        [dir="rtl"] {
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            background: var(--card-bg);
+            padding: 15px 25px;
+            border-radius: 16px;
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.4rem;
+            background: linear-gradient(45deg, var(--accent), var(--accent-hover));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-toggle {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .btn-toggle:hover {
+            background: var(--accent);
+            color: #000;
+            font-weight: 700;
+        }
+        [data-theme="light"] .btn-toggle:hover {
+            color: #fff;
+        }
+
+        .progress-container {
+            position: sticky;
+            top: 15px;
+            z-index: 100;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 15px 20px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 25px var(--shadow);
+        }
+
+        .progress-bar-bg {
+            background: rgba(255, 255, 255, 0.1);
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+            transition: width 0.3s ease;
+        }
+
+        .overview-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+
+        .overview-title {
+            font-size: 1.25rem;
+            margin-bottom: 8px;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .exercise-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px var(--shadow);
+        }
+
+        .card-header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        .exercise-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .badge {
+            background: rgba(0, 242, 254, 0.15);
+            color: var(--accent);
+            padding: 5px 14px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            border: 1px solid rgba(0, 242, 254, 0.2);
+        }
+
+        .card-body {
+            padding: 25px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
+        @media (min-width: 650px) {
+            .card-body {
+                grid-template-columns: 240px 1fr;
+            }
+        }
+
+        .visual-container {
+            width: 100%;
+            height: 190px;
+            background: #ffffff;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .visual-img {
+            max-width: 95%;
+            max-height: 95%;
+            object-fit: contain;
+        }
+
+        .details {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .prescription {
+            font-weight: 700;
+            color: var(--accent);
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+
+        .progression-box {
+            background: rgba(0, 0, 0, 0.12);
+            padding: 14px;
+            border-radius: 12px;
+            margin-top: 10px;
+            border-left: 4px solid var(--accent);
+        }
+        [dir="rtl"] .progression-box {
+            border-left: none;
+            border-right: 4px solid var(--accent);
+        }
+
+        .progression-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .complete-btn {
+            width: 100%;
+            margin-top: 15px;
+            padding: 14px;
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--text-main);
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .complete-btn.done {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="logo" id="logoText">SUMMER TRANSFORMATION</div>
+        <div class="controls">
+            <button class="btn-toggle" onclick="toggleLanguage()" id="langBtn">العربية</button>
+            <button class="btn-toggle" onclick="toggleTheme()" id="themeBtn">☀️ Light</button>
+        </div>
+    </header>
+
+    <div class="progress-container">
+        <div style="display: flex; justify-content: space-between; font-weight: 700;">
+            <span id="progressText">Today's Progress Tracker</span>
+            <span id="progressPercent">0%</span>
+        </div>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progressBar"></div>
+        </div>
+    </div>
+
+    <div class="overview-box">
+        <div class="overview-title" id="ovTitle">⚡ Ultimate 45-60 Min Holiday Blueprint</div>
+        <p style="font-size: 0.95rem; line-height: 1.6;" id="ovDesc">
+            Specifically constructed for heavy frames: entirely low-impact to shield your joints while maximizing total metabolic burn. Perform all 10 exercises sequentially. Take 60-90 seconds of rest between moves. Repeat the circuit 3 times to hit your perfect 45-60 minute target!
+        </p>
+    </div>
+
+    <div id="exerciseContainer"></div>
+</div>
+
+<script>
+    const languages = {
+        en: {
+            logo: "SUMMER TRANSFORMATION 🔥",
+            langBtn: "العربية",
+            progressText: "Workout Plan Progress",
+            ovTitle: "⚡ Ultimate 45-60 Min Holiday Blueprint",
+            ovDesc: "Specifically constructed for heavy frames: entirely low-impact to shield your joints while maximizing total metabolic burn. Perform all 10 exercises sequentially. Take 60-90 seconds of rest between moves. Repeat the circuit 3 times to hit your perfect 45-60 minute target!",
+            complete: "Mark Exercise Complete",
+            completed: "✓ Complete for Today!",
+            progression: "Progressive Overload Strategy:",
+            exercises: [
+                { title: "1. Chair Box Squats", badge: "Lower Body (1/2)", desc: "Maintains absolute weight distribution back onto the heels, shielding knee joints while engaging large fat-burning lower muscles.", presc: "3 Sets of 10-12 Reps", prog: "Start with a high chair. As your hip mobility improves, use a lower sofa edge.", gif: "https://weighttraining.guide/wp-content/uploads/2018/07/Bodyweight-squat-resized.png" },
+                { title: "2. Floor Glute Bridges", badge: "Lower Body (2/2)", desc: "Builds immense glute strength from a completely lying position, removing all gravity-based crushing stress from knees and lower back.", presc: "3 Sets of 12-15 Reps", prog: "Hold the top locked position for a full 3 seconds before descending.", gif: "https://spotebi.com/wp-content/uploads/2015/01/glute-bridge-exercise-illustration.jpg" },
+                { title: "3. Incline Wall Push-Ups", badge: "Upper Body Push (1/2)", desc: "Delivers foundational upper body pushing development without forcing a heavy torso down onto the floor prematurely.", presc: "3 Sets of 10 Reps", prog: "Move your feet further back away from the wall to significantly increase mechanical tension.", gif: "https://workoutlabs.com/wp-content/uploads/watermarked/Wall_Push-Ups_Pushups-1.png" },
+                { title: "4. Solid Chair Tricep Dips", badge: "Upper Body Push (2/2)", desc: "Targets the back of your arms. Keep your lower back and tailbone riding very tightly along the edge of the seat.", presc: "3 Sets of 8-10 Reps", prog: "Bend knees at 90 degrees to make it safe. Extend legs straighter outward over the summer to level up.", gif: "https://workoutlabs.com/wp-content/uploads/watermarked/Chair_Tricep_Dip_F_WorkoutLabs.png" },
+                { title: "5. Doorframe/Towel Rows", badge: "Upper Body Pull (1/2)", desc: "Uses home architecture or a secure towel to pull your bodyweight, strengthening the upper back muscles that correct posture.", presc: "3 Sets of 12 Reps", prog: "Walk your heels closer toward the anchor point to increase the pulling resistance.", gif: "https://weighttraining.guide/wp-content/uploads/2017/12/Towel-row-resized.png" },
+                { title: "6. Standing Posture Bird-Dog", badge: "Upper Body Pull (2/2)", desc: "A great active pulling and reaching structure that targets spinal alignment and posterior muscles safely while standing up.", presc: "3 Sets of 10 Reps each side", prog: "Squeeze the shoulder blades intensely together at the absolute peak of the reach.", gif: "https://learntomove.org/wp-content/uploads/2014/12/exercise-back-birddog.jpg?w=300" },
+                { title: "7. Supine Deadbug Core System", badge: "Core Stability (1/2)", desc: "The ultimate abdominal builder for heavier frames. Safely flattens and stabilizes your lower back directly against the solid floor.", presc: "3 Sets of 45 Seconds", prog: "Move with extreme control. The slower you cycle your limbs, the harder your deep core fires.", gif: "https://spotebi.com/wp-content/uploads/2015/05/dead-bug-exercise-illustration.jpg" },
+                { title: "8. Elevated Side Plank on Knees", badge: "Core Stability (2/2)", desc: "Maintains hip elevation from the knees to strongly challenge your lateral side core without crushing an extended ankle joint.", presc: "3 Sets of 20 Seconds per side", prog: "Progressively work up from a 15-second hold to a solid 30-second hold over July.", gif: "https://liftmanual.com/wp-content/uploads/2023/04/bent-knee-side-plank.webp" },
+                { title: "9. Low-Impact High Knee Marching", badge: "Cardiovascular (1/2)", desc: "Keeps your metabolic rate high and burning without exposing your ankle and knee cartilage to jump impacts.", presc: "5 Minutes Continuous Burn", prog: "Increase your pacing speed and drive your arms straight up overhead with each stride.", gif: "https://spotebi.com/wp-content/uploads/2014/10/high-knees-exercise-illustration.jpg" },
+                { title: "10. Side Skater Low-Impact Steps", badge: "Cardiovascular (2/2)", desc: "Encourages dynamic lateral side-to-side coordination, engaging different hip stabilization networks without any landing force.", presc: "4 Minutes Continuous Burn", prog: "Drop into a slightly deeper athletic stance to recruit more leg muscle fibers.", gif: "https://liftmanual.com/wp-content/uploads/2023/04/skater-hops.jpg" }
+            ]
+        },
+        ar: {
+            logo: "برنامج التحول الصيفي 🔥",
+            langBtn: "English",
+            progressText: "مدى إنجاز الحصة التدريبية",
+            ovTitle: "⚡ الخطة المتكاملة لشغل 45-60 دقيقة يومياً",
+            ovDesc: "مصمم بدقة للأوزان الكبيرة: التمارين خالية تماماً من القفز والاصطدام لحماية المفاصل مع تحقيق أعلى معدل لحرق الدهون. نفذ التمارين العشرة بالتوالي، وخذ راحة 60-90 ثانية. كرر هذه الدورة كاملة 3 مرات لتصل إلى هدفك اليومي المثالي!",
+            complete: "تحديد التمرين كمكتمل",
+            completed: "✓ تم إنجاز التمرين اليوم!",
+            progression: "أسلوب زيادة الصعوبة التدريجية خلال الصيف:",
+            exercises: [
+                { title: "1. القرفصاء على الكرسي", badge: "الجزء السفلي (1/2)", desc: "يضمن توزيع وزن الجسم بالكامل على الكعبين للخلف، مما يحمي الركبة تماماً ويشغل عضلات الفخذ الحارقة للدهون.", presc: "3 مجموعات × 10-12 تكرار", prog: "ابدأ بكرسي مرتفع. مع تحسن مرونة الحوض، انزل لسطح أريكة أكثر انخفاضاً.", gif: "https://weighttraining.guide/wp-content/uploads/2018/07/Bodyweight-squat-resized.png" },
+                { title: "2. جسر الحوض من الاستلقاء", badge: "الجزء السفلي (2/2)", desc: "يبني قوة هائلة في العضلات الخلفية من وضعية الاستلقاء الكامل، مما يلغي تماماً أي ضغط جاذبية على الركب وأسفل الظهر.", presc: "3 مجموعات × 12-15 تكرار", prog: "اثبت في الأعلى عند أقصى نقطة انقباض لمدة 3 ثوانٍ كاملة قبل النزول لزيادة التحدي.", gif: "https://spotebi.com/wp-content/uploads/2015/01/glute-bridge-exercise-illustration.jpg" },
+                { title: "3. تمارين الضغط المائل على الحائط", badge: "دفع الجزء العلوي (1/2)", desc: "يطور عضلات الصدر والذراعين بأمان دون إجبار الجسم على تحمل الوزن الزائد كاملاً على الأرض في البداية.", presc: "3 مجموعات × 10 تكرارات", prog: "أبعد قدميك مسافة أكبر عن الحائط لزيادة الوزن والمقاومة الميكانيكية على العضلات.", gif: "https://workoutlabs.com/wp-content/uploads/watermarked/Wall_Push-Ups_Pushups-1.png" },
+                { title: "4. عزل الذراعين الخلفية على الكرسي", badge: "دفع الجزء العلوي (2/2)", desc: "يستهدف عضلات الذراع الخلفية (الترايسبس). حافظ على بقاء ظهرك قريباً جداً من حافة الكرسي أثناء الحركة.", presc: "3 مجموعات × 8-10 تكرار", prog: "اجعل الركبتين بزاوية 90 درجة للأمان. لزيادة الصعوبة مع الأسابيع، مدد رجليك للأمام أكثر.", gif: "https://workoutlabs.com/wp-content/uploads/watermarked/Chair_Tricep_Dip_F_WorkoutLabs.png" },
+                { title: "5. سحب الظهر باستخدام المنشفة / إطار الباب", badge: "سحب الجزء العلوي (1/2)", desc: "يعتمد على إطار باب صلب أو منشفة لسحب وزن الجسم، مما يقوي عضلات الظهر المسؤولة عن تعديل القوام ومنع الانحناء.", presc: "3 مجموعات × 12 تكرار", prog: "اقترب بقدميك أكثر نحو نقطة الارتكاز لزيادة المقاومة وجعل السحب أكثر قوة وصعوبة.", gif: "https://weighttraining.guide/wp-content/uploads/2017/12/Towel-row-resized.png" },
+                { title: "6. تمرين الطير والكلب من الوقوف", badge: "سحب الجزء العلوي (2/2)", desc: "حركة ممتازة لمد الذراع والرجل تهدف لتعديل استقامة العمود الفقري وتشغيل العضلات الخلفية بأمان من وضعية الوقوف.", presc: "3 مجموعات × 10 تكرارات لكل جهة", prog: "اعصر لوحي الكتف معاً بقوة شديدة عند أول المسافة وأقصى نقطة من مد الذراع.", gif: "https://learntomove.org/wp-content/uploads/2014/12/exercise-back-birddog.jpg?w=300" },
+                { title: "7. تمرين الحشرة الميتة لعضلات البطن", badge: "ثبات الجذع والبطن (1/2)", desc: "التمرين المثالي لبناء السيكس باك والأبراج الداخلية للأوزان الثقيلة. يثبت أسفل الظهر تماماً على الأرض الصلبة لمنع الإصابات.", presc: "3 مجموعات × 45 ثانية متواصلة", prog: "تحرك ببطء وتحكم شديد؛ فكلما كانت الحركة أبطأ، زاد اشتعال العضلات العميقة للبطن.", gif: "https://spotebi.com/wp-content/uploads/2015/05/dead-bug-exercise-illustration.jpg" },
+                { title: "8. البلانك الجانبي المعدل على الركب", badge: "ثبات الجذع والبطن (2/2)", desc: "يتحدى الخواصر وعضلات البطن الجانبية بقوة عبر رفع الحوض اعتماداً على الركبة لحماية مفاصل الكاحل والقدم.", presc: "3 مجموعات × 20 ثانية لكل جهة", prog: "تدرج في الصعوبة بزيادة وقت الثبات من 15 ثانية وصولاً إلى 30 ثانية كاملة خلال شهر يوليو.", gif: "https://liftmanual.com/wp-content/uploads/2023/04/bent-knee-side-plank.webp" },
+                { title: "9. مارش رفع الركب بدون اصطدام", badge: "الحرق الهوائي والكارديو (1/2)", desc: "يحافظ على معدل ضربات قلبك في النطاق المثالي لحرق الدهون دون تعريض غضاريف الركبة والكاحل لصدمات القفز.", presc: "5 دقائق حرق متواصلة", prog: "زد من سرعة الخطوات مع دفع ذراعيك مستقيمتين تماماً فوق رأسك مع كل خطوة.", gif: "https://spotebi.com/wp-content/uploads/2014/10/high-knees-exercise-illustration.jpg" },
+                { title: "10. خطوات التزلج الجانبية اللطيفة", badge: "الحرق الهوائي والكارديو (2/2)", desc: "تنشط التوازن الجانبي الحركي وتشغل عضلات الحوض التثبيتية المختلفة دون أي قوى هبوط عنيفة على الأرض.", presc: "4 دقائق حرق متواصلة", prog: "انزل بوضعية قرفصاء خفيفة أثناء التنقل الجانبي لتشغيل ألياف عضلية أكبر في الفخذ.", gif: "https://liftmanual.com/wp-content/uploads/2023/04/skater-hops.jpg" }
+            ]
+        }
+    };
+
+    let currentLang = 'en';
+    let currentTheme = 'dark';
+    let completedExercises = new Set();
+
+    function renderExercises() {
+        const langData = languages[currentLang];
+        const container = document.getElementById('exerciseContainer');
+        container.innerHTML = '';
+
+        document.getElementById('logoText').innerText = langData.logo;
+        document.getElementById('progressText').innerText = langData.progressText;
+        document.getElementById('ovTitle').innerText = langData.ovTitle;
+        document.getElementById('ovDesc').innerText = langData.ovDesc;
+        document.getElementById('langBtn').innerText = currentLang === 'en' ? 'العربية' : 'English';
+
+        langData.exercises.forEach((ex, idx) => {
+            const isDone = completedExercises.has(idx);
+            const card = document.createElement('div');
+            card.className = 'exercise-card';
+            card.innerHTML = `
+                <div class="card-header">
+                    <div class="exercise-title">${ex.title}</div>
+                    <span class="badge">${ex.badge}</span>
+                </div>
+                <div class="card-body">
+                    <div class="visual-container">
+                        <img class="visual-img" src="${ex.gif}" alt="Form Guide Diagram">
+                    </div>
+                    <div class="details">
+                        <div>
+                            <p style="margin-bottom: 8px; line-height: 1.5; font-size:0.95rem;">${ex.desc}</p>
+                            <div class="prescription">⚡ ${ex.presc}</div>
+                        </div>
+                        <div class="progression-box">
+                            <div class="progression-title">📈 ${langData.progression}</div>
+                            <p style="font-size: 0.88rem; line-height: 1.45;">${ex.prog}</p>
+                        </div>
+                        <button class="complete-btn ${isDone ? 'done' : ''}" onclick="toggleComplete(${idx})">
+                            ${isDone ? langData.completed : langData.complete}
+                        </button>
+                    </div>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+        updateProgressBar();
+    }
+
+    function toggleComplete(index) {
+        if (completedExercises.has(index)) {
+            completedExercises.delete(index);
+        } else {
+            completedExercises.add(index);
+        }
+        renderExercises();
+    }
+
+    function updateProgressBar() {
+        const total = languages[currentLang].exercises.length;
+        const current = completedExercises.size;
+        const percent = Math.round((current / total) * 100);
+        
+        document.getElementById('progressBar').style.width = `${percent}%`;
+        document.getElementById('progressPercent').innerText = `${percent}%`;
+    }
+
+    function toggleLanguage() {
+        currentLang = currentLang === 'en' ? 'ar' : 'en';
+        document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+        document.documentElement.lang = currentLang;
+        renderExercises();
+    }
+
+    function toggleTheme() {
+        currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        document.getElementById('themeBtn').innerText = currentTheme === 'dark' ? '☀️ Light' : '🌙 Dark';
+    }
+
+    renderExercises();
+</script>
+
+</body>
+</html>
